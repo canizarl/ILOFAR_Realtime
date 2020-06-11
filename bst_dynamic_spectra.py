@@ -1,3 +1,24 @@
+""" 
+
+    bst_dynamic_spectra.py
+    Displays dynamic spectra from ILOFAR bst data
+
+    Supported instruments:
+        LOFAR        -- bst .dat file
+
+
+
+
+    Some notes on how I code.
+   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Denotes to be changed
+   -----------------------------------------   Denotes module heading to be turned into function
+   iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii   Denotes information
+   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   ADD code. Plans for supporting function
+
+
+"""
+
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates
@@ -6,6 +27,15 @@ import os
 
 
 def sb_to_freq(sb, mode):
+    """
+        simple function to convert ilofar subbands into frequencies
+        input:
+            sb: int subbands (488 for mode 357)
+            mode: int mode 3 , 5 or 7.... typically. supports 4 and 6 too. 
+        output:
+            freqs: 1d vector with frequencies for y axis
+
+    """
     if mode == 3:
         nyq_zone = 1
         clock = 200 #MHz
@@ -59,6 +89,19 @@ def backsub(data, percentile=1.0):
 
 
 def make_spectro(bstfile):
+    """
+        Takes a .dat file from lofar bst data and 
+        outputs dynamic spectra information
+
+        input:
+            bstfile: str PATH to the file
+
+        output:
+            data: 2d matrix of dynamic spectra 
+            freqs: 1d vector with frequencies for y axis
+            t_arr: 1d vector with times for x axis
+
+    """
 
     rawdata=np.fromfile(bstfile)
     file_size=os.path.getsize(bstfile)
@@ -87,7 +130,9 @@ def make_spectro(bstfile):
 
 
 
-
+    #  iiiiiiiiiiiiiiiiiiiiii    #
+    "  FREQUENCY VECTOR          "
+    #  iiiiiiiiiiiiiiiiiiiiii    #
     freqs = []
     sbs = np.arange(54,452+2,2)
     freqs = sb_to_freq(sbs,mode = 3)
@@ -99,6 +144,9 @@ def make_spectro(bstfile):
 
 
 
+    #  iiiiiiiiiiiiiiiiiiiiii    #
+    "  TIME VECTOR               "
+    #  iiiiiiiiiiiiiiiiiiiiii    #
     obs_start = bstfile[len(bstfile)-27:len(bstfile)-12]
     obs_start = datetime.strptime(obs_start, "%Y%m%d_%H%M%S")
     obs_len  = timedelta(seconds = data.shape[0])
@@ -119,13 +167,32 @@ def make_spectro(bstfile):
 
 
 def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
+    '''
+    Plots dynamic spectra.
+    Expects:
+        data: 2d matrix of dynamic spectra 
+        freqs: 1d vector with frequencies for y axis
+        epoch: 1d vector with times for x axis
+        pol: char X or Y to display which polarisation is it
+        savefile: str 'yes' or 'no' to savefile or not 
+
+    '''
 
 
+
+    #  iiiiiiiiiiiiiiiiiiiiii    #
+    "  Settings                  "
+    #  iiiiiiiiiiiiiiiiiiiiii    #
     datamin = np.percentile(data,1)
     datamax = np.percentile(data, 99)
     colormap = 'plasma'
     date_obs = dates.num2date(epoch[0]) 
     
+
+
+    #  iiiiiiiiiiiiiiiiiiiiii    #
+    "  Plot                  "
+    #  iiiiiiiiiiiiiiiiiiiiii    #
     plt.figure()
     plt.pcolormesh(epoch, freqs, data,
                     vmin=datamin, vmax=datamax,
@@ -134,8 +201,19 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
     plt.xlabel('Time (UT)')
     plt.ylabel('Frequency MHz')
     plt.gca().invert_yaxis()
+    # aaaaaaaa #
+    " change x labels format to time format "
+    # aaaaaaaa #
+
+
     plt.show()
 
+
+
+
+    #  aaaaaaaaaaaaaaaaaaaaaa    #
+    "  Savefile                  "
+    #  aaaaaaaaaaaaaaaaaaaaaa    #
     if savefile=='yes':
         print('SAVEFILE NOT  SUPPORTED YET')
 
@@ -146,17 +224,47 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
 
 
 if __name__ == "__main__":
-    #Read in data
+ 
+    "  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   "
+    #       ADD command line arguments             #
+    "  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa  "
+    # filename
+    # usage
+    # verbose probably just for debbugging mode
+
+
+
+
+
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
+    #             Read in data                      #
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     bstfile = "20200602_071428_bst_00X.dat"
 
-    pol = bstfile[-5]
-    # EXTRACT DATA
+    pol = bstfile[-5]    # polarisation  X or Y. knows from file name . 
+
+
+
+
+
+
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
+    #             Extract data                      #
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     data,freqs,epoch = make_spectro(bstfile)
 
-    # Background subtract data
+ 
+ 
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
+    #        Bacground subtract data                #
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     spectro = backsub(data,percentile=1)
 
-    # Plot dynamic spectra 
+
+
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
+    #        Plot dynamic spectra                   #
+    "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     plt_dynSpec(spectro,freqs, epoch, pol)
 
 
