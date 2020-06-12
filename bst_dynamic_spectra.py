@@ -179,7 +179,6 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
     '''
 
 
-
     #  iiiiiiiiiiiiiiiiiiiiii    #
     "  Settings                  "
     #  iiiiiiiiiiiiiiiiiiiiii    #
@@ -193,17 +192,30 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
     #  iiiiiiiiiiiiiiiiiiiiii    #
     "  Plot                  "
     #  iiiiiiiiiiiiiiiiiiiiii    #
-    plt.figure()
-    plt.pcolormesh(epoch, freqs, data,
+    
+    fig = plt.figure(figsize=(8, 6))
+
+    ax = fig.add_subplot(1, 1, 1)
+    ax.pcolormesh(epoch, freqs, data,
                     vmin=datamin, vmax=datamax,
                     cmap = colormap)
-    plt.title(f'LOFAR MODE 357 - {pol} - IE613 (Birr) - {date_obs.year} - {date_obs.month:02} - {date_obs.day:02}')
-    plt.xlabel('Time (UT)')
-    plt.ylabel('Frequency MHz')
-    plt.gca().invert_yaxis()
-    # aaaaaaaa #
-    " change x labels format to time format "
-    # aaaaaaaa #
+    ax.set_title(f'LOFAR MODE 357 - {pol} - IE613 (Birr) ')
+    ax.set_xlabel('Time (UT)')
+    ax.set_ylabel('Frequency MHz')
+    ax.invert_yaxis()
+    
+    # iiiiiiiiiiiiiiiiiiiiiiiiiiiiii #
+    """      time axis labels      """
+    # iiiiiiiiiiiiiiiiiiiiiiiiiiiiii #
+    ax.set_xticklabels([])
+    ax.set_xticks([])
+    ax.xaxis_date()
+    ax.xaxis.set_major_locator(dates.HourLocator(interval=3))
+    # ax.xaxis.set_minor_locator(dates.MinuteLocator(interval=60))
+    ax.xaxis.set_major_formatter(dates.DateFormatter('%H:%M:%S'))
+    ax.set_xlabel(f"TIME / {date_obs.year}  -  {date_obs.month:02}  -  {date_obs.day:02}")
+        
+
 
 
     plt.show()
@@ -216,6 +228,7 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
     #  aaaaaaaaaaaaaaaaaaaaaa    #
     if savefile=='yes':
         print('SAVEFILE NOT  SUPPORTED YET')
+
 
 
 
