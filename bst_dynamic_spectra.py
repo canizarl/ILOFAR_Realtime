@@ -1,12 +1,12 @@
 """ 
-
     bst_dynamic_spectra.py
     Displays dynamic spectra from ILOFAR bst data
 
     Supported instruments:
         LOFAR        -- bst .dat file
 
-
+    Author: Luis Alberto Canizares
+    contact: canizares@cp.dias.ie
 
 
     Some notes on how I code.
@@ -23,8 +23,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import dates
 from datetime import datetime, timedelta
+from scipy.stats import mode
 import os
-
 
 def sb_to_freq(sb, mode):
     """
@@ -86,6 +86,83 @@ def backsub(data, percentile=1.0):
     return data
 
 
+def add_gaps(data, freqs, time):
+    ''' 
+        Finds gaps in a frequency vector with equal freq resolution
+        Adds gaps to the data in the form of 0 values
+        Adds frequency values accordingly
+
+        Gaps in time array not implemented
+        Not a priority
+
+        input:
+            data: 2D array dynamic spectra
+            freqs: 1D vector of frequencies with equal freq resolution
+            time: 1D vector of epoch times
+        
+        output: same as input. 
+
+
+    '''
+
+    freqs = np.array([1,2,3,4,5,6,7,8,9,20,21,22,23,24,25,26,27,28,35,36,37,38,39,40])    
+    #  iiiiiiiiiiiiiiiii  #
+    """  Gaps in freq   """
+    #  iiiiiiiiiiiiiiiii  #
+    # find the freq resolution
+    freq_diff=[] 
+    for i in range(0, len(freqs)-1): 
+        freq_diff.append(freqs[i+1]-freqs[i]) 
+    freq_res = mode(freq_diff)[0][0]
+
+    # find a gap location if all is correct gap should be at 199 and 399 
+    gap_locations = np.where(freq_diff != freq_res)[0]
+    if (gap_locations[0] != 199 ) and (gap_locations[1] != 399):
+        print('Warning, location not as expected for mode 357')
+    
+
+    f_gap_size = []
+    # find gap size in terms of index
+    for each in gap_locations:
+        gap  = int((freqs[each+1]-freqs[each])/freq_res)
+        f_gap_size.append(gap) 
+
+    # add gaps
+    n = 0
+    
+
+    new_freqs = np.zeros(int(len(freqs)+each)-1)
+    for each in f_gap_size:
+        
+        add_freqs = np.zeros(each-1)
+        for i in range(0, each-1):
+            add_freqs[i] = i*freq_res+1
+        print(f"{add_freqs} + {freqs[int(gap_locations[n])]}")
+        add_freqs = add_freqs + freqs[int(gap_locations[n])]
+        print(f'{add_freqs}')
+
+        new_freqs[:gap_locations[n]+1] = freqs[:gap_locations[n]+1]
+        new_freqs[gap_locations[n]+1:gap_locations[n]+f_gap_size[n]] = add_freqs
+        new_freqs[gap_locations[n]+f_gap_size[n]:] = freqs[gap_locations[n]+1:] 
+      
+        
+        n = n+1
+
+        
+
+
+
+
+
+
+
+
+    # aaaaaaaaaaaaaaaaa  #
+    """  Gaps in time """
+    # aaaaaaaaaaaaaaaaa  #
+    # NOT A PRIORITY
+
+    return data, freqs, time
 
 
 def make_spectro(bstfile):
@@ -231,11 +308,6 @@ def plt_dynSpec(data,freqs,epoch,pol,savefile='no'):
 
 
 
-
-
-
-
-
 if __name__ == "__main__":
  
     "  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa   "
@@ -256,24 +328,16 @@ if __name__ == "__main__":
 
     pol = bstfile[-5]    # polarisation  X or Y. knows from file name . 
 
-
-
-
-
-
     "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     #             Extract data                      #
     "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     data,freqs,epoch = make_spectro(bstfile)
 
  
- 
     "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
-    #        Bacground subtract data                #
+    #        Background subtract data                #
     "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     spectro = backsub(data,percentile=1)
-
-
 
     "  iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii    "
     #        Plot dynamic spectra                   #
