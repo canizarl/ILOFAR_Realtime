@@ -47,10 +47,6 @@ do
 
 
 
-
-
-
-
         # send logs
         echo "sending logs to webserver"
         curl -F file=@status_lcu.txt https://lofar.ie/monitor/post_log.php?txt=status_lcu
