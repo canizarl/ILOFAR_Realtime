@@ -1,5 +1,6 @@
+
 import matplotlib as mpl
-mpl.use('Agg')
+mpl.use('Agg')  # Comment this out if you want to display anything
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import sys
@@ -34,26 +35,49 @@ from astropy.time import Time, TimeDelta
 
 
 def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
+    """
+    Sacvespectro:
+        file_357 - str: name of file
+        t0 - datetime : Start time
+        t1 - datetime : end time
+        save_dir - str: path to directory to save figures
+        savefigure - int : leave as 1 to save figures
+
+        This function uses LOFAR_BST_357 to extract data from a file, and time range. Gnerates dynamic spectra and saves
+        it into a directory.
+
+    """
+
+    # Generates the time range for LOFAR_BST_357
     time_range = TimeRange(t0,t1)
 
+    # LOAD DATA using Lofar_BST_357
     bst_357 = Lofar_BST_357(file_357,trange=time_range)
 
+    # Adjust the levels for the plots
     clip_int = Quantity([1,99]*u.percent)
     
 
+    # Start timer to keep track of computational expense
     t0_plotting_spectro = datetime.datetime.now()
+
+    # Generates the dynamic spectra
     bst_357.plot(clip_interval=clip_int, bg_subtract=True)
+
+    # Generates a figure of the dynamic spectra
     fig = plt.gcf()
     fig.set_size_inches(11,8)
+
+    # End timer to keep track of computational expense
     t1_plotting_spectro = datetime.datetime.now()
 
-
+    # Start timer to keep track of computational expense
     t0_saving_spectro = datetime.datetime.now()
-    
+
+    # Saving the plot
     if savefigure == 1:
         file_357 = file_357[-27:]
         png_dir = save_dir
-        #plt.savefig(f'{png_dir}/{file_357[:-4]}_{t0.datetime.hour:02}{t0.datetime.minute:02}_{t1.datetime.hour:02}{t1.datetime.minute:02}.png',dpi=300)
 
         spectro_name = file_357[:-4]+'_'+str(t0.datetime.hour).zfill(2)+str(t0.datetime.minute).zfill(2)+'_'+str(t1.datetime.hour).zfill(2)+str(t1.datetime.minute).zfill(2)+'.png'
         plt.savefig(png_dir+'/'+spectro_name,dpi=300)
@@ -78,14 +102,23 @@ def savelightcurve(light,times,freqs, fname, save_dir, pol, savefigure=1):
         light :  dynamic spectra
         time  :  epoch
         freqs :  list with 2D items. first is the frequency value, the second one is index, i.e. where to find it in light
+        fname : file name
+        save_dir: where is it saved
+        pol: char:  polarisation X or Y
+        savefigure : 1 = yes  0 = no
+
+        This function chooses a set of frequencies in dynamic spectra and plots them as lightcurves.
     """
+
+    # for now use 4 frequencies
     np.shape(light)
     light1 = np.array(light[int(freqs[0,1]),:])
     light2 = np.array(light[int(freqs[1,1]),:])
     light3 = np.array(light[int(freqs[2,1]),:])
     light4 = np.array(light[int(freqs[3,1]),:])
 
-    # Normalise data
+
+    # Normalise lightcurves
     light1_ave = np.average(light1)
     light1 = np.divide(light1, light1_ave)
 
@@ -147,6 +180,10 @@ def savelightcurve(light,times,freqs, fname, save_dir, pol, savefigure=1):
     return 0
 
 def find_nearest(array,value):
+    """
+    Finds the nearest value in an array.
+    Useful in this context for finding a particular frequency giving it an approximate desired one.
+    """
     idx = np.searchsorted(array, value, side="left")
     if idx > 0 and (idx == len(array) or math.fabs(value - array[idx-1]) < math.fabs(value - array[idx])):
         return array[idx-1],idx
@@ -158,27 +195,36 @@ def find_nearest(array,value):
 if __name__ == "__main__":
     # input the filename from command line
     if len(sys.argv)>=2:
-        filename = sys.argv[1]
+        filename = sys.argv[1]                           # path to data file
     else:
-        filename = "data/20200602_071428_bst_00X.dat"
+        filename = "data/20200602_071428_bst_00X.dat"    # this is for testing
     debugg = 1
     t_start =datetime.datetime.now()
 
-    file_357 = filename[:-5]
+    file_357 = filename[:-5]           # this gets rid of 'X.dat' from the file to make sure it works if the Y pol is given
     
     #lightcurve frequencies
     lcv_freqs = [25, 70, 150, 220]
 
 
-    # Open the .dat file
+    # Open the .dat file for the X pol
     bst_357_X = Lofar_BST_357(file_357+'X.dat')
+    # Get the epoch
     times_X = bst_357_X.times
+
+
+    # Get the range from last ten mins to now
+    # Get the last 10 mins
     t0 = times_X[-10*60]
+    # the last data point
     t1 = times_X[-1]
+
     # getting the data for X polarization
     light_X = bst_357_X.data
+    # getting the frequencies for X polarization
     freqs_X = np.array(bst_357_X.freqs)
 
+    # find the indices of the corresponding frequencies for extraction from dynamic spectra
     freqs_idx = list()
     for item in lcv_freqs:
         freqs_idx.append(find_nearest(freqs_X,item))
