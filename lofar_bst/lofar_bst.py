@@ -1,5 +1,19 @@
 #!/usr/bin/env python
 
+# Developers:
+# Pearse Murphy : pearse.murphy@dias.ie
+# Alberto Canizares: canizares@cp.dias.ie
+
+
+
+# MODIFICATIONS
+# 2020-07-08  Alberto  _get_data(self): ----> added while loop to make sure data can be reshaped to 488 
+ 
+
+
+
+
+
 import copy
 
 import astropy.units as u
@@ -59,6 +73,14 @@ class Lofar_BST:
 		"""
 		data = np.fromfile(self.bst_file)
 		t_len = data.shape[0]/len(self.sbs)
+
+		# Make sure that data can be reshaped to 488
+		while len(data)%488!=0:
+			data = data[:-1]
+			
+
+
+
 		self.data = data.reshape(-1, len(self.sbs))
 		tarr = np.arange(t_len) * self.integration
 		self.times = self.obs_start + tarr
