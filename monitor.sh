@@ -1,4 +1,32 @@
 #!/bin/bash
+"
+ ILOFAR MONITOR
+
+  SUPPORTS
+  357 Solar Observations
+  357 w/ REALTA Solar Observations
+
+  Uses a data buffer folder to get the data from the LCU. Every 10 mins it syncs using rsync.
+  If it cant sync means observation isnt on or station is in international mode and will wait 30 mins.
+
+  USES lofar_monitor.py to generate Dynamic spectra which is then sent to a webserver(done inside python)
+  Generates logs from CPU status and station status and sends them  to webserver.
+
+  RUN this using tmux.
+  to run tmux:
+
+  # NEW Tmux session
+    tmux new -s monitor
+  # in tmux ... run script
+    ./monitor.sh
+  # use ctrl+b d  to dettach
+  # to reattach to the session
+    tmux attach -t monitor
+
+
+"
+
+
 
 
 while true
