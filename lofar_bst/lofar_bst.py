@@ -8,10 +8,11 @@
 
 # MODIFICATIONS
 # 2020-07-08  Alberto  _get_data(self): ----> added while loop to make sure data can be reshaped to 488 
- 
 
+"""
+Modified to be used in ilofar monitor.
 
-
+"""
 
 
 import copy

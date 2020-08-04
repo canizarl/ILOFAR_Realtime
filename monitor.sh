@@ -24,6 +24,9 @@
     tmux attach -t monitor
 
 
+  NEEDS:
+  lofar_monitor.py
+  lofar_bst.py
 "
 
 

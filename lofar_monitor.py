@@ -1,3 +1,17 @@
+"""
+Uses lofar_bst.py (version modified by Alberto Canizares
+https://github.com/canizarl/ILOFAR_Realtime
+
+Used in ILOFAR station.
+Collects data from lgc to display near real time dynamic spectra of the current observations.
+Supports:
+357 solar bst observations.
+
+
+"""
+
+
+
 
 import matplotlib as mpl
 mpl.use('Agg')  # Comment this out if you want to display anything
