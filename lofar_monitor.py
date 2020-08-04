@@ -204,7 +204,7 @@ if __name__ == "__main__":
     file_357 = filename[:-5]           # this gets rid of 'X.dat' from the file to make sure it works if the Y pol is given
     
     #lightcurve frequencies
-    lcv_freqs = [25, 70, 150, 220]
+    lcv_freqs = [50, 70, 150, 220]
 
 
     # Open the .dat file for the X pol
