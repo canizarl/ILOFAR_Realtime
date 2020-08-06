@@ -17,15 +17,16 @@ import matplotlib as mpl
 mpl.use('Agg')  # Comment this out if you want to display anything
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+plt.rcParams.update({'font.size': 16})
 import sys
 import os
 import math
 
-lgc = 1
+lgc = 0
 
 if lgc == 0:
     # PATH to bst file location
-    pathtothisfile = '/Users/albertocanizares/OneDrive/Work/0_PhD/ILOFAR_REALTIME/Scripts/lofar_bst'
+    pathtothisfile = '/Users/albertocanizares/OneDrive/Work/0_PhD/Projects/ILOFAR_REALTIME/Scripts/lofar_bst'
     sys.path.append(pathtothisfile)
     print(pathtothisfile)
 
@@ -102,6 +103,7 @@ def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
             #os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/monitor/post_image.php?img="+pngname)
             os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/monitor/post_image.php?img=spectro1"+pol+".png")
             print(pathtospectro)
+
 
     plt.close()
     t1_saving_spectro = datetime.datetime.now()

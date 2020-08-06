@@ -7,7 +7,8 @@
 
 
 # MODIFICATIONS
-# 2020-07-08  Alberto  _get_data(self): ----> added while loop to make sure data can be reshaped to 488 
+# 2020-07-08  Alberto  _get_data(self): ----> added while loop to make sure data can be reshaped to 488
+# 2020-08-06  Alberto : plot 		date_format = dates.DateFormatter("%H:%M") Seconds removed from x axis to avoid overlapping.
 
 """
 Modified to be used in ilofar monitor.
@@ -123,7 +124,7 @@ class Lofar_BST:
 		if bg_subtract:
 			data = (data.T/np.mean(data[:,:10],axis=1)).T
 		imshow_args = {}
-		date_format = dates.DateFormatter("%H:%M:%S")
+		date_format = dates.DateFormatter("%H:%M")
 		if scale == "log":
 			data = np.log10(data)
 		if clip_interval is not None:
