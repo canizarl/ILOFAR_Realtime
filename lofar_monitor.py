@@ -67,11 +67,11 @@ def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
     time_range = TimeRange(t0,t1)
 
     # LOAD DATA using Lofar_BST_357
-    bst_357 = Lofar_BST_357(file_357,trange=time_range)
+    bst_357 = Lofar_BST_357(file_357,trange=time_range,pol=pol)
 
     # Adjust the levels for the plots
-    clip_int = Quantity([1,99]*u.percent)
-    
+    clip_int = Quantity([50,98]*u.percent)
+
 
     # Start timer to keep track of computational expense
     t0_plotting_spectro = datetime.datetime.now()
@@ -82,6 +82,7 @@ def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
     # Generates a figure of the dynamic spectra
     fig = plt.gcf()
     fig.set_size_inches(11,8)
+    
 
     # End timer to keep track of computational expense
     t1_plotting_spectro = datetime.datetime.now()
@@ -167,12 +168,12 @@ def savelightcurve(light,times,freqs, fname, save_dir, pol, savefigure=1):
     ax.plot(times, light3, 'g-', label=str(freqs[2,0])+"MHz")
     ax.plot(times, light4, 'k-', label=str(freqs[3,0])+"MHz")
 
-    ax.set_title('Lightcurve I-LOFAR MODE 357 Solar Observation')
+    ax.set_title('Lightcurve I-LOFAR MODE 357 Solar Observation ' +pol+ ' polarization')
     ax.set_xlabel('Observation Start Time'+str(date.year)+' - ' + str(date.month)+' - '+ str(date.day)+'  '+str(date.hour)+':'+str(date.minute)+':'+str(date.second)+'  UTC')
     ax.set_ylabel('Arbitrary units')
     ax.legend(loc='upper left')
     ax.xaxis.set_major_locator(mdates.MinuteLocator(interval=2))   #to get a tick every 2 minutes
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))     #optional formatting   
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))     #optional formatting
 
     if savefigure == 1:
         fname = fname[-27:]
@@ -218,7 +219,7 @@ if __name__ == "__main__":
     t_start =datetime.datetime.now()
 
     file_357 = filename[:-5]           # this gets rid of 'X.dat' from the file to make sure it works if the Y pol is given
-    
+
     #lightcurve frequencies
     lcv_freqs = [50, 70, 150, 220]
 
@@ -253,7 +254,7 @@ if __name__ == "__main__":
     # Default output directory is a ./monitor/YYYY.MM.DD
     # otherwise manually add output directory.
     if len(sys.argv) <= 2:
-        png_dir = os.getcwd()+'/monitor/'+ str(t0.datetime.year) + '.'+ str(t0.datetime.month).zfill(2) + '.'+ str(t0.datetime.day).zfill(2) 
+        png_dir = os.getcwd()+'/monitor/'+ str(t0.datetime.year) + '.'+ str(t0.datetime.month).zfill(2) + '.'+ str(t0.datetime.day).zfill(2)
     else:
         png_dir = sys.argv[2]
 
@@ -278,7 +279,7 @@ if __name__ == "__main__":
     if len(times_X)> 600:
         savelightcurve(light_X[:,-600:-1],times_X[-600:-1],freqs_idx,file_357+'X.dat',png_dir, 'X')
         savelightcurve(light_Y[:,-600:-1],times_Y[-600:-1],freqs_idy,file_357+'Y.dat',png_dir, 'Y')
-        
+
         savespectro(file_357+'X.dat',t0,t1,png_dir, 'X')
         savespectro(file_357+'Y.dat',t0,t1,png_dir, 'Y')
 

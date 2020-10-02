@@ -1,0 +1,578 @@
+<head>
+    <!-- -- UNCOMMENT THE BELOW CODE IF YOU WANT WEBSITE TO REFRESH ITSELF EVERY 10 MINUTES-- -->
+    <!--- meta http-equiv="refresh" content="600" -->
+    <!-- ---------------------------------- LIBRARIES USED FOR CALENDAR USED ON WEBSITE ARE BELOW--------------------- -- -->
+
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
+    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet">
+
+    <!-- -------------------------------------LIBRARIES FOR THE INTERACTIVE MAP BELOW---------------------------------- -- -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <!-- -- Stylesheet for the map below -- -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+
+    <!-- -- Libraries for the map below -- -->
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-ant-path" type="text/javascript"></script>
+    <script src="https://lofar.dias.ie/status_map/leaflet_curve/src/leaflet.curve.js"></script>
+
+    <style>
+        /*------------------------------------STYLING FOR CALENDAR DONE BELOW----------------------------------------------- */
+
+        #container {
+            visibility: hidden;
+            max-width: 250px;
+        }
+
+        #loader {
+            color: #22a571;
+            height: 40px;
+            width: 200 px;
+            position: absolute;
+            top: 45%;
+            left: 45%;
+        }
+
+        #value_date {
+            display: block;
+        }
+
+
+        /*custom styles for calendar to reflect I-LOFAR theme*/
+
+        .e-input-group.e-date-wrapper.e-custom-style:not(.e-float-icon-left)::before, /* csslint allow: adjoining-classes*/
+        .e-input-group.e-date-wrapper.e-custom-style:not(.e-float-icon-left)::after /* csslint allow: adjoining-classes*/ { /* csslint allow: adjoining-classes*/
+            background: #22a571;
+        }
+
+        .e-date-wrapper.e-custom-style input.e-input::selection { /* csslint allow: adjoining-classes*/
+            background: #22a571;
+        }
+
+        .e-date-wrapper.e-custom-style input.e-input::-moz-selection { /* csslint allow: adjoining-classes*/
+            background: #22a571;
+        }
+
+        .e-calendar .e-content td.e-disabled .e-day, .e-calendar .e-content td.e-disabled:hover .e-day, .e-calendar .e-content td.e-disabled:focus .e-day {
+            color: #22a571;
+            font-weight: bold;
+        }
+
+        .e-date-wrapper.e-custom-style .e-input-group-icon.e-date-icon.e-icons, /* csslint allow: adjoining-classes*/
+        .e-date-wrapper.e-custom-style .e-input { /* csslint allow: adjoining-classes*/
+            color: #22a571;
+        }
+
+        .e-date-wrapper.e-custom-style input.e-input::selection { /* csslint allow: adjoining-classes*/
+            background: #22a571;
+        }
+
+        .e-date-wrapper.e-custom-style input.e-input::-moz-selection { /* csslint allow: adjoining-classes*/
+            background: #22a571;
+        }
+
+        .e-date-wrapper.e-custom-style .e-input-group-icon.e-date-icon.e-icons.e-active { /* csslint allow: adjoining-classes*/
+            color: #22a571;
+        }
+    </style>
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+
+    <!-- ------------------------------------ ALL STYLING FOR THE STATUS MAP DONE BELOW--------------------------------------------------------------------------- -->
+    <style>
+
+        div.lba * {
+            color: black;
+        }
+
+        div.hba * {
+            color: white;
+        }
+        #hba_info {
+            text-align: center;
+            width: 100%;
+            margin: 0px auto;
+            margin-top: 10px;
+        }
+
+        .hba {
+            position: relative;
+            border: none;
+            display: inline-block;
+            width: 53px;
+            height: 53px;
+            background-color: #003b4a;
+            background-image: url('http://lofar.ie/wp-content/uploads/2020/08/hba_tile_white.png');
+            background-size: cover;
+            line-height: 53px;
+            transition: all 0.2s ease;
+            border-radius: 0px;
+            #text-indent: -9999px;
+            overflow: hidden;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .hba_active {
+            position: relative;
+            border: none;
+            display: inline-block;
+            width: 53px;
+            height: 53px;
+            background-color: #22a571;
+            background-image: url('http://lofar.ie/wp-content/uploads/2020/08/hba_tile_white.png');
+            background-size: cover;
+            line-height: 53px;
+            transition: all 0.2s ease;
+            border-radius: 0px;
+            #text-indent: -9999px;
+            overflow: hidden;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .hba:hover {
+            background-color: #22a571;
+            z-index: 1000;
+            transform: scale(1.4);
+        }
+
+        #hba_super_container {
+            margin: 0px auto;
+            width: 800px;
+            text-align: center;
+        }
+
+        #hba_container {
+            margin: 0px auto;
+            display: inline-block;
+            height: 800px;
+            position: relative;
+            width: 800px;
+        }
+
+        .info img {
+            width: 100%;
+            height: auto;
+        }
+
+        .info_lba img {
+            width: 100%;
+            height: auto;
+        }
+
+        .info {
+            position: absolute;
+            z-index: 500;
+            display: none;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #003b4a;
+            color: #fff;
+            width: 95%;
+            height: auto;
+            padding: 20px;
+            margin-top: 10%;
+        }
+
+        .info_lba {
+            position: absolute;
+            z-index: 500;
+            display: none;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            text-align: center;
+            background-color: #003b4a;
+            color: #fff;
+            width: 95%;
+            height: auto;
+            padding: 20px;
+            margin-top: 10%;
+        }
+
+        .close {
+            width: 60px;
+            height: 30px;
+            text-align: center;
+            right: 0;
+            top: 0;
+            line-height: 30px;
+            border: 3px solid #fff;
+            cursor: pointer;
+            transition: 0.2s linear;
+        }
+
+            .close:hover {
+                border: 3px solid #22a571;
+                color: #22a571;
+                transition: 0.2s linear;
+            }
+
+        .close1 {
+            width: 60px;
+            height: 30px;
+            text-align: center;
+            right: 0;
+            top: 0;
+            line-height: 30px;
+            border: 3px solid #fff;
+            cursor: pointer;
+            transition: 0.2s linear;
+        }
+
+            .close1:hover {
+                border: 3px solid #22a571;
+                color: #22a571;
+                transition: 0.2s linear;
+            }
+
+        #lba_super_container {
+            margin: 0px auto;
+            width: 800px;
+            text-align: center;
+        }
+
+        #lba_container {
+            margin: 0px auto;
+            width: 800px;
+            display: inline-block;
+            height: 800px;
+            position: relative;
+        }
+
+        .lba {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            color: #003b4a;
+            transition: all 0.2s ease;
+            background-image: url('http://lofar.ie/wp-content/uploads/2020/08/lba.png');
+            background-size: cover;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .lba_active {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            background-color: #22a571;
+            transition: all 0.2s ease;
+            background-image: url('http://lofar.ie/wp-content/uploads/2020/08/lba.png');
+            background-size: cover;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+
+        .lba:hover {
+            background-color: #22a571;
+            transform: scale(2.3);
+            color: #fff;
+            z-index: 1000;
+        }
+
+        .mapouter {
+            width: 100%;
+        }
+
+        .polyline {
+            stroke: #003b4a;
+            fill: none;
+            stroke-dasharray: 10,20;
+            stroke-width: 4;
+            stroke-linecap ="square";
+        }
+
+        #map {
+            height: 100vh;
+            position: absolute;
+            right: 0;
+            width: 80%;
+        }
+
+        svg {
+            position: relative;
+            icon: url('http://lofar.ie/wp-content/uploads/2020/08/hba.png');
+        }
+
+        path {
+            stroke-linecap: square;
+            pulseColor: #a1a1a1;
+        }
+
+        .travelMarker {
+            fill: yellow;
+            opacity: 0.75;
+        }
+
+        .waypoints {
+            fill: black;
+            opacity: 0;
+        }
+
+
+        .lineConnect {
+            fill: none;
+            stroke: black;
+            opacity: 1;
+        }
+
+        .locnames {
+            fill: black;
+            text-shadow: 1px 1px 1px #FFF, 3px 3px 5px #000;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        #stat_live_info {
+            width: 15%;
+            padding: 70px 30px;
+            color: #000;
+            font-size: 13px;
+            text-align: left;
+        }
+
+
+        /*----- The following code exists for mobile responsiveness -----*/
+        @media screen and (max-width: 800px) {
+            #map {
+                width: 100vw;
+                height: 90vh;
+                position: absolute;
+                right: 0;
+                left: 0;
+            }
+
+            #stat_live_info {
+                width: 100%;
+                margin-top: 90vh;
+            }
+
+            .hba {
+                position: relative;
+                border: none;
+                display: inline-block;
+                width: 33px;
+                height: 33px;
+            }
+
+            #lba_super_container {
+                width: 100vw;
+            }
+
+            #lba_container {
+                width: 100vw;
+            }
+
+            #hba_super_container {
+                width: 100vw;
+            }
+
+            #hba_container {
+                width: 100vw;
+            }
+
+            .info {
+                width: 100vw;
+                height: 100vh;
+                z-index: 3000;
+                margin: 0px auto;
+            }
+        }
+    </style>
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- -- ALL STYLING OF THE BUTTONS USED TO SWITCH BETWEEN OBSERVATIONS/STATUS MAP/ENGINEERING INFO IS DONE BELOW -- -->
+    <style>
+
+
+        /* Style tab links */
+        .tablink {
+            background-color: #003b4a;
+            color: white;
+            float: left;
+            border: 12px;
+            outline: 2px solid #22a571;
+            cursor: pointer;
+            padding: 12px 14px;
+            font-size: 16px;
+            width: 20%;
+        }
+            
+            .tablink:hover {
+                /*UNCOMMENT BELOW IF YOU WANT BUTTONS TO HAVE COLOUR WHEN HOVERING OVER THEM*/
+                background-color: #22a571; 
+            }
+
+        .button {
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            background-color: #003b4a;
+            text-align: center;
+            outline: 2px solid #22a571;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 0%;
+        }
+
+        .button1 {
+            background-color: #003b4a;
+            position: absolute;
+            left: 450px;
+            top:  330px;
+        }
+
+            .button1:hover {
+                /*UNCOMMENT BELOW IF YOU WANT BUTTONS TO HAVE COLOUR WHEN HOVERING OVER THEM*/
+                background-color: #22a571;
+            }
+    </style>
+
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- -- Below STYLING code is to ensure that the spectra images appear side by side (2 at a time taking 50% space)-- -->
+    <style>
+        .row:empty {
+            display: none;
+        }
+
+        .column:empty {
+            display: none;
+        }
+
+        div.Status Layout * {
+            color: black;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        /* CREATES TWO EQUALLY SIZED COLUMNS FOR SPECTRA THAT SIT BESIDES EACH OTHER*/
+        .column {
+            flex: 50.0%;
+            padding: 5px;
+            transition: flex 1s; /* Animation */
+        }
+
+            /* THE BELOW CODE INCREASES SIZE OF SPECTRA WHEN USER IS CLICKING DOWN MOUSE ON IT */
+            .column:active {
+                flex: 125%
+            }
+
+        /* Rounded border between spectra */
+        hr.rounded {
+            border-top: 4px solid #22a571;
+            border-radius: 2px;
+        }
+    </style>
+
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- -- BELOW SCRIPT IS USED TO INITALISE THE TILES OF EACH ANTTENNA IN THE STATUS MAP -- -->
+    <script>
+        function activate_tiles() {
+            // Popup Content Manager for the HBAs
+            $(document).ready(function () {
+                $(".hba").on('click', function () {
+                    console.log("click!!!");
+                    $('.info').toggle("slide ");
+                });
+            });
+
+            $(document).ready(function () {
+                $(".hba_active").on('click', function () {
+                    console.log("click!!!");
+                    $('.info').toggle("slide ");
+                });
+            });
+
+            $(document).ready(function () {
+                $(".close").unbind("click").on('click', function () {
+                    $('.info').toggle("slide");
+                });
+            });
+            jQuery(document).ready(function () {
+                jQuery(".hba").click(function (event) {
+                    event.preventDefault()
+                    jQuery('.infocontent').html(jQuery(this).html());
+                });
+            });
+            jQuery(document).ready(function () {
+                jQuery(".hba_active").click(function (event) {
+                    event.preventDefault()
+                    jQuery('.infocontent').html(jQuery(this).html());
+                });
+            });
+
+            // Popup Content Manager for the LBAs
+            $(document).ready(function () {
+                $(".lba").on('click', function () {
+                    console.log("click!!!");
+                    $('.info_lba').toggle("slide");
+                });
+            });
+            $(document).ready(function () {
+                $(".lba_active").on('click', function () {
+                    console.log("click!!!");
+                    $('.info_lba').toggle("slide");
+                });
+            });
+            $(document).ready(function () {
+                $(".lba").on('click', function () {
+                    console.log("click!!!");
+                    $('.info_lba ew34xxxx').toggle("slide");
+                });
+            });
+            $(document).ready(function () {
+                $(".close1").unbind("click").on('click', function () {
+                    $('.info_lba').toggle("slide");
+                });
+            });
+            jQuery(document).ready(function () {
+                jQuery(".lba").click(function (event) {
+                    event.preventDefault()
+                    jQuery('.info_lbacontent').html(jQuery(this).html());
+                });
+            });
+            jQuery(document).ready(function () {
+                jQuery(".lba_active").click(function (event) {
+                    event.preventDefault()
+                    jQuery('.info_lbacontent').html(jQuery(this).html());
+                });
+            });
+        };
+    </script>
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+    <!-- --------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+
+    <!-- ------------------Control Cache - This makes sure new figures are loaded into website ------------------------------------------------------------------- -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+
+</head>

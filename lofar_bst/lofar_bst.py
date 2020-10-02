@@ -111,7 +111,7 @@ class Lofar_BST:
 			f_end = None
 		self.freqs = self.freqs[f_start:f_end]
 		self.data = self.data[t_start:t_end, f_start:f_end]
-	def plot(self, ax=None, title=None, bg_subtract=False, scale="linear", clip_interval: u.percent=None):
+	def plot(self, ax=None, title=None, bg_subtract=False, scale="linear", clip_interval: u.percent=None, pol=''):
 		"""
 		Plot dynamic spectrum for whole data
 		Assume first 10 seconds are pure background for background subtraction
@@ -144,7 +144,7 @@ class Lofar_BST:
 		if title:
 			ax.set_title(title)
 		else:
-			ax.set_title("I-LOFAR Mode {} Solar Observation".format(self.obs_mode))
+			ax.set_title("I-LOFAR Mode {} Solar Observation / {} polarization".format(self.obs_mode, self.pol))
 		ax.set_xlabel("Start Time " + self.obs_start.iso[:-4] + "UTC")
 		ax.set_ylabel("Frequency (MHz)")
 		return ret
@@ -164,7 +164,7 @@ class Lofar_BST_357(Lofar_BST):
 			trange = Optional: time range (sunpy.time.TimeRange)
 			frange = Optional: frequency range (2 element list/array/tuple astropy.units.Quantity)
 	"""
-	def __init__(self, bst_file, trange=None, frange=None):
+	def __init__(self, bst_file, trange=None, frange=None, pol=''):
 		"""
 		Initialise super with dummy sbs, obs_mode and frange arguments
 		Insert spacing between modes as masked region in data
@@ -174,6 +174,7 @@ class Lofar_BST_357(Lofar_BST):
 		self.frange = frange
 		super().__init__(self.bst_file, sbs=np.arange(488), obs_mode=3, trange=self.trange, frange=None, bit_mode=8, integration=1)
 		self.frange = frange
+		self.pol = pol
 		self._frequency_correction()
 	
 	def _frequency_correction(self):	

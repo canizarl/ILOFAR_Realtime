@@ -58,22 +58,56 @@ do
 
 	if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
 		echo "Upload succeeded"
-                python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/*X* /home/ilofar/Data/IE613/monitor/$today
-		sensors > status_lgc.txt
-		ssh lcu 'rspctl --status' > status_lcu.txt
-                echo "lofar monitor generated a preview."
-                echo ""
+        python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/*X* /home/ilofar/Data/IE613/monitor/$today
+		
+		
+		# # # # # # # # # #
+		# STATUS REPORT   #
+		# # # # # # # # # #		   
+		# LGC   
+		echo 'LGC STATUS' > status_lgc.txt
+		date >> status_lgc.txt
+		sensors >> status_lgc.txt
+		#LCU
+		echo 'LCU STATUS' > status_lcu.txt
+		date >> status_lcu.txt
+		ssh lcu 'rspctl --status' >> status_lcu.txt
+	
+        echo "lofar monitor generated a preview."
+        echo ""
 	elif rsync -ahP $realta_data_source $monitor_temp_data/datastream | grep -q '.dat'; then
 		echo "Upload succeeded. Realta is working."
-                python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/*X* /home/ilofar/Data/IE613/monitor/$today
-                sensors > status_lgc.txt
-		ssh lcu 'rspctl --status' > status_lcu.txt
+        python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/*X* /home/ilofar/Data/IE613/monitor/$today
+		
+		# # # # # # # # # #
+		# STATUS REPORT   #
+		# # # # # # # # # #		   
+		# LGC   
+		echo 'LGC STATUS' > status_lgc.txt
+		date >> status_lgc.txt
+		sensors >> status_lgc.txt
+		#LCU
+		echo 'LCU STATUS' > status_lcu.txt
+		date >> status_lcu.txt
+		ssh lcu 'rspctl --status' >> status_lcu.txt
+
 		echo "lofar monitor generated a preview."
-                echo ""
+        echo ""
 	else
-		sensors > status_lgc.txt
-		echo "LCU IN INTERNATIONAL MODE" > status_lcu.txt
-    		echo "Upload failed. Try in half an hour"
+		# # # # # # # # # #
+		# STATUS REPORT   #
+		# # # # # # # # # #		   
+		# LGC   
+		echo 'LGC STATUS' > status_lgc.txt
+		date >> status_lgc.txt
+		sensors >> status_lgc.txt
+		#LCU
+		echo 'LCU STATUS' > status_lcu.txt
+		date >> status_lcu.txt
+		echo "LCU IN INTERNATIONAL MODE" >> status_lcu.txt
+
+		
+    	echo "Upload failed. Try in half an hour"
 		sleep 1200
 	fi
 
@@ -86,7 +120,7 @@ do
 	# send logs
 	echo "sending logs to webserver"
 	curl -F file=@status_lcu.txt https://lofar.ie/monitor/post_log.php?txt=status_lcu
-        curl -F file=@status_lgc.txt https://lofar.ie/monitor/post_log.php?txt=status_lgc
+    curl -F file=@status_lgc.txt https://lofar.ie/monitor/post_log.php?txt=status_lgc
 	echo "logs sent correctly"
 
 	echo " sleep 10 mins"
