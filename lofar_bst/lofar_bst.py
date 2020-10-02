@@ -9,6 +9,7 @@
 # MODIFICATIONS
 # 2020-07-08  Alberto  _get_data(self): ----> added while loop to make sure data can be reshaped to 488
 # 2020-08-06  Alberto : plot 		date_format = dates.DateFormatter("%H:%M") Seconds removed from x axis to avoid overlapping.
+# 2020-10-02  Alberto : polarization in title added
 
 """
 Modified to be used in ilofar monitor.
