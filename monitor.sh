@@ -54,11 +54,20 @@ do
 	echo " "
 	echo $(date)
 
+	# populates folders in Data folder with javascript files for the calendar to know the names of the figures that will be used. 	
+	python addtoscript.py
+	curl -F file=@/home/ilofar/Data/IE613/monitor/dates_calendar.js https://lofar.ie/operations-monitor/post_log.php?js=dates_calendar
+
+
+
+
+
 
 
 	if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
 		echo "Upload succeeded"
-        python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/*X* /home/ilofar/Data/IE613/monitor/$today
+      		newestfile=$(ls -Art ${monitor_temp_data}/ | tail -n 1)
+		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/${newestfile} /home/ilofar/Data/IE613/monitor/$today
 		
 		
 		# # # # # # # # # #
@@ -77,7 +86,8 @@ do
         echo ""
 	elif rsync -ahP $realta_data_source $monitor_temp_data/datastream | grep -q '.dat'; then
 		echo "Upload succeeded. Realta is working."
-        python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/*X* /home/ilofar/Data/IE613/monitor/$today
+		newestfile=$(ls -Art ${monitor_temp_data}/datastream/ | tail -n 1)
+       		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/${newestfile} /home/ilofar/Data/IE613/monitor/$today
 		
 		# # # # # # # # # #
 		# STATUS REPORT   #
@@ -114,18 +124,19 @@ do
 
 
 
-
+	
 
 
 	# send logs
 	echo "sending logs to webserver"
-	curl -F file=@status_lcu.txt https://lofar.ie/monitor/post_log.php?txt=status_lcu
-    curl -F file=@status_lgc.txt https://lofar.ie/monitor/post_log.php?txt=status_lgc
+	curl -F file=@status_lcu.txt https://lofar.ie/operations-monitor/post_log.php?txt=status_lcu
+	curl -F file=@status_lgc.txt https://lofar.ie/operations-monitor/post_log.php?txt=status_lgc
 	echo "logs sent correctly"
 
 	echo " sleep 10 mins"
 	#wait 10 mins
 	sleep 600
+	
 done
 
 

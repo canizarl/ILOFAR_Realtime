@@ -101,9 +101,10 @@ def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
         pngname = spectro_name[:-4]
         if lgc == 1:
             print("Sending "+ pngname + " to monitor webserver")
-            #os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/monitor/post_image.php?img="+pngname)
-            os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/monitor/post_image.php?img=spectro1"+pol+".png")
+            #os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
+            os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img=spectro1"+pol+".png")
             print(pathtospectro)
+                
 
 
     plt.close()
@@ -188,8 +189,8 @@ def savelightcurve(light,times,freqs, fname, save_dir, pol, savefigure=1):
         pngname = lightcurve_name[:-4]
         if lgc == 1:
             print("Sending "+ pngname + " to monitor webserver")
-            #os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/monitor/post_image.php?img="+pngname)
-            os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/monitor/post_image.php?img=lc1"+pol+".png")
+            #os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
+            os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img=lc1"+pol+".png")
 
 
 
