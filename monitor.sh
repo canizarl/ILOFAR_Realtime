@@ -29,13 +29,30 @@
   lofar_monitor.py
   lofar_bst.py
 "
-
+day="0"
 
 while true
 do
 	source activate monitor_env
 
+	daynow=$(date +%d)
+	if (($day != $daynow))
+	then
+		echo "new day"
+
+		# clear all figures
+		for i in {1..10}
+		do
+			curl -F file=@/home/ilofar/Monitor/NoData/LC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=lc${i}X.png
+			curl -F file=@/home/ilofar/Monitor/NoData/LC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=lc${i}Y.png
+
+			curl -F file=@/home/ilofar/Monitor/NoData/SPEC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=spectro${i}X.png
+			curl -F file=@/home/ilofar/Monitor/NoData/SPEC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=spectro${i}Y.png
+		done
+	fi
+
 	today=$(date +'%Y.%m.%d')
+	day=$(date +%d)
 
 	mkdir -p  ~/Monitor/data_buff/$today
 
@@ -60,10 +77,6 @@ do
 
 
 
-
-
-
-
 	if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
 		echo "Upload succeeded"
       		newestfile=$(ls -Art ${monitor_temp_data}/ | tail -n 1)
@@ -84,6 +97,8 @@ do
 	
         echo "lofar monitor generated a preview."
         echo ""
+		./sendtomonitor.sh
+
 	elif rsync -ahP $realta_data_source $monitor_temp_data/datastream | grep -q '.dat'; then
 		echo "Upload succeeded. Realta is working."
 		newestfile=$(ls -Art ${monitor_temp_data}/datastream/ | tail -n 1)
@@ -102,6 +117,7 @@ do
 		ssh lcu 'rspctl --status' >> status_lcu.txt
 
 		echo "lofar monitor generated a preview."
+		./sendtomonitor.sh
         echo ""
 	else
 		# # # # # # # # # #
@@ -116,15 +132,9 @@ do
 		date >> status_lcu.txt
 		echo "LCU IN INTERNATIONAL MODE" >> status_lcu.txt
 
-		
     	echo "Upload failed. Try in half an hour"
 		sleep 1200
 	fi
-
-
-
-
-	
 
 
 	# send logs
@@ -138,9 +148,6 @@ do
 	sleep 600
 	
 done
-
-
-
 
 
 

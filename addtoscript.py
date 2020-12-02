@@ -30,7 +30,7 @@ def cut_year2(str):
     
 def cut_month2(str):
     month = int(str[-5:-3])
-    month2 = month - 1
+    month2 = month - 1            # in javascript january is 0.
     return month2
 
 def cut_day2(str):
@@ -119,7 +119,7 @@ dates = []         # initialise the dates list
 
 """
 for yyyy in range(2017, 2100):
-    for mm in range(1,13):
+    for mm in range(0,12):
         for dd in range(1,32):
             new_date = "new Date("  + str(yyyy) + "," + str(mm) + "," + str(dd)  + ")"
             dates.append(new_date)
@@ -160,3 +160,4 @@ Create_list()
 
 
 os.chdir(og_dir)
+

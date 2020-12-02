@@ -7,6 +7,12 @@ Collects data from lgc to display near real time dynamic spectra of the current 
 Supports:
 357 solar bst observations.
 
+Author:
+Alberto Canizares - canizares@cp.dias.ie
+
+Changes:
+    01/12/2020 : Alberto : no longer sends pngs from this script. Sending from bash. 
+
 
 """
 
@@ -22,7 +28,7 @@ import sys
 import os
 import math
 
-lgc = 0
+lgc = 1
 
 if lgc == 0:
     # PATH to bst file location
@@ -99,11 +105,13 @@ def savespectro(file_357,t0,t1, save_dir,pol, savefigure=1):
         plt.savefig(png_dir+'/'+spectro_name,dpi=300)
         pathtospectro = png_dir+'/'+ spectro_name
         pngname = spectro_name[:-4]
-        if lgc == 1:
-            print("Sending "+ pngname + " to monitor webserver")
-            #os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
-            os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img=spectro1"+pol+".png")
-            print(pathtospectro)
+
+        # No longer sending from here. 
+        # if lgc == 1:
+        #     print("Sending "+ pngname + " to monitor webserver")
+        #     #os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
+        #     os.system("curl -F file=@"+pathtospectro+" https://lofar.ie/operations-monitor/post_image.php?img=spectro1"+pol+".png")
+        #     print(pathtospectro)
                 
 
 
@@ -187,10 +195,12 @@ def savelightcurve(light,times,freqs, fname, save_dir, pol, savefigure=1):
 
         pathtolightcurve = png_dir+'/'+ lightcurve_name
         pngname = lightcurve_name[:-4]
-        if lgc == 1:
-            print("Sending "+ pngname + " to monitor webserver")
-            #os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
-            os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img=lc1"+pol+".png")
+
+        # No longer sending from here. 
+        # if lgc == 1:
+        #     print("Sending "+ pngname + " to monitor webserver")
+        #     #os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img="+pngname)
+        #     os.system("curl -F file=@"+pathtolightcurve+" https://lofar.ie/operations-monitor/post_image.php?img=lc1"+pol+".png")
 
 
 

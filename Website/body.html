@@ -1,4 +1,4 @@
-<body>
+<body onLoad="window.scrollTo(0, 100)">
     <!-- ----------------------- below buttons are used to divide page up into three different categories --------------------------------------------------- -->
     <button class="tablink" onclick="openPage('Live-Data',this, color ='#22a585')" id="defaultOpen">Live Data</button>
     <button class="tablink" onclick="openPage('Status-Layout',this, color ='#22a585')" id="statusmap">Antenna Status</button>
@@ -697,6 +697,11 @@
             document.getElementById(pageName).style.display = "block";
             elmnt.style.backgroundColor = color;
         }
+        window.scroll({
+            top: 0, 
+            left: 0, 
+            behavior: 'smooth' 
+            });
 
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
