@@ -119,10 +119,33 @@ dates = []         # initialise the dates list
 
 """
 for yyyy in range(2017, 2100):
-    for mm in range(0,12):
-        for dd in range(1,32):
-            new_date = "new Date("  + str(yyyy) + "," + str(mm) + "," + str(dd)  + ")"
-            dates.append(new_date)
+    for mm in range(1,13):
+        if (mm == 4)|(mm==6)|(mm==9)|(mm==11):  # april, june, sept, nov 30 days
+            for dd in range(1,31):
+                new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                dates.append(new_date)     
+        elif(mm==2):
+            if (yyyy%4==0):
+                if (yyyy%100 !=0 ):
+                    for dd in range(1,30):
+                        new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                        dates.append(new_date)    
+                elif (yyyy%100==0) & (yyyy%400==0):
+                    for dd in range(1,30):
+                        new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                        dates.append(new_date)   
+                else:
+                    for dd in range(1,29):
+                        new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                        dates.append(new_date)     
+            else:
+                for dd in range(1,29):
+                    new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                    dates.append(new_date)     
+        else:
+            for dd in range(1,32):
+                new_date = "new Date("  + str(yyyy) + "," + str(mm-1) + "," + str(dd)  + ")"
+                dates.append(new_date)
 s = 0
 
 
