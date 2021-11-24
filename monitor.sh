@@ -28,6 +28,14 @@
   NEEDS:
   lofar_monitor.py
   lofar_bst.py
+  authors: Alberto Canizares  - canizares (at) cp.dias.ie
+           Jeremy Rigney - jeremy.rigney (at) dias.ie
+
+  changes:
+  2020-12-14 :  Jeremy: added line to run update_antenna_status.py.
+  2020-12-14 :  Alberto: 30 mins delay when international mode removed. Now it always updates every 10 mins.
+  2020-12-15 :  Alberto: Clear data_buffer at night.
+  2020-12-15 :  Jeremy: Send HBA+LBA status log files to webserver
 "
 day="0"
 
@@ -48,6 +56,7 @@ do
 
 			curl -F file=@/home/ilofar/Monitor/NoData/SPEC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=spectro${i}X.png
 			curl -F file=@/home/ilofar/Monitor/NoData/SPEC_NO_DATA.png https://lofar.ie/operations-monitor/post_image.php?img=spectro${i}Y.png
+			rm -rf ~/Monitor/data_buff/
 		done
 	fi
 
@@ -71,22 +80,24 @@ do
 	echo " "
 	echo $(date)
 
-	# populates folders in Data folder with javascript files for the calendar to know the names of the figures that will be used. 	
+	# populates folders in Data folder with javascript files for the calendar to know the names of the figures that will be used.
 	python addtoscript.py
 	curl -F file=@/home/ilofar/Data/IE613/monitor/dates_calendar.js https://lofar.ie/operations-monitor/post_log.php?js=dates_calendar
 
+        python update_antenna_status.py #/home/ilofar/Monitor/
+        curl -F file=@HBA_numbers.txt https://lofar.ie/operations-monitor/post_log.php?txt=HBA_numbers
+        curl -F file=@LBA_numbers.txt https://lofar.ie/operations-monitor/post_log.php?txt=LBA_numbers
 
-
-	if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
+        if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
 		echo "Upload succeeded"
       		newestfile=$(ls -Art ${monitor_temp_data}/ | tail -n 1)
 		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/${newestfile} /home/ilofar/Data/IE613/monitor/$today
-		
-		
+
+
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #		   
-		# LGC   
+		# # # # # # # # # #
+		# LGC
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -94,7 +105,7 @@ do
 		echo 'LCU STATUS' > status_lcu.txt
 		date >> status_lcu.txt
 		ssh lcu 'rspctl --status' >> status_lcu.txt
-	
+
         echo "lofar monitor generated a preview."
         echo ""
 		./sendtomonitor.sh
@@ -103,11 +114,11 @@ do
 		echo "Upload succeeded. Realta is working."
 		newestfile=$(ls -Art ${monitor_temp_data}/datastream/ | tail -n 1)
        		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/${newestfile} /home/ilofar/Data/IE613/monitor/$today
-		
+
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #		   
-		# LGC   
+		# # # # # # # # # #
+		# LGC
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -122,8 +133,8 @@ do
 	else
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #		   
-		# LGC   
+		# # # # # # # # # #
+		# LGC
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -132,8 +143,8 @@ do
 		date >> status_lcu.txt
 		echo "LCU IN INTERNATIONAL MODE" >> status_lcu.txt
 
-    	echo "Upload failed. Try in half an hour"
-		sleep 1200
+    		#echo "Upload failed. Try in half an hour"
+		#sleep 1200
 	fi
 
 
@@ -143,10 +154,10 @@ do
 	curl -F file=@status_lgc.txt https://lofar.ie/operations-monitor/post_log.php?txt=status_lgc
 	echo "logs sent correctly"
 
-	echo " sleep 10 mins"
+        echo " sleep 10 mins"
 	#wait 10 mins
 	sleep 600
-	
+
 done
 
 
