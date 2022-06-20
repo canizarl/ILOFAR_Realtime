@@ -1,33 +1,25 @@
-<body onLoad="window.scrollTo(0, 100)">
-    <!-- ----------------------- below buttons are used to divide page up into three different categories --------------------------------------------------- -->
-    <button class="tablink" onclick="openPage('Live-Data',this, color ='#22a585')" id="defaultOpen">Live Data</button>
-    <button class="tablink" onclick="openPage('Status-Layout',this, color ='#22a585')" id="statusmap">Antenna Status</button>
-    <button class="tablink" onclick="openPage('Telescope-Info',this, color ='#22a585')" id="engineering">Engineering Info</button>
-    <button class="tablink" onclick="openPage('Archived-Data',this, color ='#22a585')" id="archive">Archived Data</button>
-    <br>
-    <br>
-    <br>
-    <br>
-    <!-- ----------------------- ------------------------------------------------------------------------ --------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
-    <!-- ----------------------- LIVE DATA TAB ------------------------------------------ --------------------------------------------------- -->
+<!-- onLoad="window.scrollTo(0, 100)">-->
+<!-- ----------------------- below buttons are used to divide page up into three different categories --------------------------------------------------- -->
+<button id="defaultOpen" class="tablink" onclick="openPage('Live-Data', 'defaultOpen', '#000000')" >Live Data</button>
+<button id="statusmap" class="tablink" onclick="openPage('Status-Layout', 'statusmap' , '#000000')">Antenna Status</button>
+<button id="engineering" class="tablink" onclick="openPage('Telescope-Info', 'engineering', '#000000')">Engineering Info</button>
+<button id="archive" class="tablink" onclick="openPage('Archived-Data', 'archive', '#000000')">Archived Data</button>
+<br><br>
+<!-- ----------------------- ------------------------------------------------------------------------ --------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+<!-- ----------------------- LIVE DATA TAB ------------------------------------------ --------------------------------------------------- -->
+<div id="Live-Data" class="tabcontent">
+<h3>Real Time Spectra</h3>
+ 
 
-    <div id="Live-Data" class="tabcontent">
-        <left><h3>Real Time Spectra</h3></left>
-        <br>Near-realtime dynamic spectra are shown on this page when I-LOFAR is in local mode. Dynamic spectra updated every 10 mins.
-        <br>
-        <br>
-        <div id="spectra_update"></div>
-        <br>
-        <br>
+Near-realtime dynamic spectra are shown on this page when I-LOFAR is in local mode. Dynamic spectra updated every 10 mins.
+<div id="spectra_update"></div>
+ 
 
-        <!-- ------------------------ BELOW DIV CONTAINS LIVE SPECTRA-- --------------------------------->
-
-        <div id="livespectracontainer" class="spectrahide"></div>
-
-
-        <!-- ------------------------ BELOW IS JAVASCRIPT POPULATES LIVE DATA-- --------------------------------->
-        <script>
+<!-- ------------------------ BELOW DIV CONTAINS LIVE SPECTRA-- --------------------------------->
+<div id="livespectracontainer" class="spectrahide"></div>
+<!-- ------------------------ BELOW IS JAVASCRIPT POPULATES LIVE DATA-- --------------------------------->
+<script>
 
             //creating rows and columns for the spectra - CURRENTLY SET AS 20 *4 = 80 PLACEHOLDERS
             for (var i = 1; i < 21; i++) {
@@ -42,7 +34,7 @@
                 newDiv.className = 'row';
                 document.getElementById('livespectracontainer').appendChild(newDiv);
                 // UNCOMMENT THE BELOW CREATES DIVIDER BETWEEN EACH SET OF 4 PLOTS
-                //document.getElementById("livespectracontainer").innerHTML += "<hr>"
+                //document.getElementById("livespectracontainer").innerHTML += "</p><p></p><p></p><p></p><hr><p></p><p></p><p></p><p>
 
             }
 
@@ -99,41 +91,39 @@
             setInterval(livespectra_generator(), 240000);
 
             livespectra_generator()
-        </script>
-    </div>
-    <br>
+        </script></div>
+ 
 
+<!-- ----------------------- ------------------------------------------------------------------------ --------------------------------------------------- -->
+<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------->
+<!-- ----------------------- Archived Data TAB --------------------------------------------------- -->
+<div id="Archived-Data" class="tabcontent">
+<h3>Archived Spectra</h3>
+ 
 
+Archived dynamic spectra of when I-LOFAR was in local mode is shown on this page. Pick a date to show data.
 
+<!-- ------------------------ Inserting the Calendar element into website below-- --------------------------------->
+<div id="test"></div>
+<div id="container" class="date"><input id="value_date" type="text" /></div>
+<button id="button_spectra" class="button button_loadgraphs">Load graphs</button>
+<div id="spectra_update"></div>
+ 
 
-    <!-- ----------------------- ------------------------------------------------------------------------ --------------------------------------------------- -->
-    <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------->
-    <!-- ----------------------- Archived Data TAB --------------------------------------------------- -->
-    <div id="Archived-Data" class="tabcontent">
-        <left><h3>Archived Spectra</h3></left>
-        <br>Archived dynamic spectra of when I-LOFAR was in local mode is shown on this page. Pick a date to show data.
-        <br>
-        <br>
-        <!-- ------------------------ Inserting the Calendar element into website below-- --------------------------------->
-        <div id="test"></div>
-        <div id="container" class="date"><input id="value_date" type="text" /></div>
-        <button class="button button_loadgraphs" id="button_spectra">Load graphs</button>
-        <div id="spectra_update"></div>
-        <br>
-        <br>
+<!-- ------------------------ BELOW DIV CONTAINS SPECTRA-- --------------------------------->
+<div id="textenter">
 
-        <!-- ------------------------ BELOW DIV CONTAINS SPECTRA-- --------------------------------->
-        <div id="textenter">
-            <center><h4 id="changing"></h4></center>
-        </div>
-        <div id="spectracontainer" class="spectrahide"></div>
+ 
+<h4 id="changing"></h4>
+ 
 
-        <!-- ------------------------ FETCHING THE BLACKLIST OF DATES FOR CALENDAR-- --------------------------------->
-        <script src="https://lofar.ie/operations-monitor/filedates_calendar.js"></script>
+ </div>
+<div id="spectracontainer" class="spectrahide"></div>
+<!-- ------------------------ FETCHING THE BLACKLIST OF DATES FOR CALENDAR-- --------------------------------->
+<script src="https://lofar.ie/operations-monitor/filedates_calendar.js"></script>
 
-
-        <!-- ------------------------ BELOW IS JAVASCRIPT FOR CALENDAR-- --------------------------------->
-        <script>
+<!-- ------------------------ BELOW IS JAVASCRIPT FOR CALENDAR-- --------------------------------->
+<script>
             //BELOW CODE IS CREATING THE CALENDAR ELEMENT
             var ele = document.getElementById('container');
             if (ele) {
@@ -197,7 +187,8 @@
                 newDiv.className = 'row';
                 document.getElementById('spectracontainer').appendChild(newDiv);
                 // UNCOMMENT THE BELOW CREATES DIVIDER BETWEEN EACH SET OF 4 PLOTS
-                //document.getElementById("spectracontainer").innerHTML += "<hr>"
+                //document.getElementById("spectracontainer").innerHTML += "</p><p></p><p></p><p></p><hr><p></p><p></p><p></p><p>
+
 
             }
 
@@ -258,63 +249,32 @@
 
             }
 
-        </script>
-    </div>
-    <br>
+        </script></div>
+ 
 
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------- ENGINEERING INFO TAB ----------------------------------------------------------------------------- -->
+<div id="Telescope-Info" class="tabcontent">
+<div id="info">
 
+ 
+<h3>Telescope Information</h3>
+ 
 
+ 
+<h3>LGC Status:</h3>
+<div id="my_logfile2"></div>
+ 
+<h3>LCU Status:</h3>
+<div id="my_logfile1"></div>
+ </div>
+<!-- -- Below style is required for log files to correctly load on website, do not remove!-- -->
 
-
-
-
-
-
-
-
-
-
-
-
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------- ENGINEERING INFO TAB ----------------------------------------------------------------------------- -->
-    <div id="Telescope-Info" class="tabcontent">
-        <div id="info">
-            <center><h3>Telescope Information</h3></center>
-            <br>
-            <br>
-            <h3> LGC Status:</h3>
-            <div id="my_logfile2">
-
-            </div>
-
-            <br>
-            <br>
-            <h3> LCU Status:</h3>
-            <div id="my_logfile1">
-
-            </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-        </div>
-        <!-- -- Below style is required for log files to correctly load on website, do not remove!-- -->
-        <style>
-
-            #my_logfile1 {
-                white-space: pre-wrap;
-            }
-
-            #my_logfile2 {
-                white-space: pre-wrap;
-            }
-        </style>
-        <!-- -- Below script fetches the log files to be displayed on website-- -->
-        <script>
+<style>
+<p>            #my_logfile1 {<br />                white-space: pre-wrap;<br />            }</p>
+<p>            #my_logfile2 {<br />                white-space: pre-wrap;<br />            }<br />        </style><!-- -- Below script fetches the log files to be displayed on website-- -->
+<script>
             function loadDoc() {
                 var xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function () {
@@ -350,85 +310,49 @@
             //the log files are loaded without any line breaks, below code is necessary to add line breaks, do not delete
             var change = document.getElementById("my_logfile2").value;
             var myLineBreak = change.replace(/\r\n|\r|\n/g, "<br />");
-        </script>
-    </div>
+        </script></div>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- -- Code below is for status map tab -- -->
+<div id="Status-Layout" class="tabcontent" style="width: 100%; background-color: #003b4a; margin: 0px auto; color: #fff;">
 
+ 
+<h2 style="color: white;">Status Map of Telescope</h2>
+ 
 
+<!-- -- ALL BELOW CODE USED FOR STATUS MAP OF ANTENNAE-- -->
+<!-- -- Ensuring that tiles are scaled and reactivated if browser is resized-- -->
+<!--<body onresize="scaleTiles(), activate_tiles()">-->
+<div class="loc_int_switch">
 
+The station is currently in:
+<div id="international" style="border-radius: 12px 0px 0px 12px;">INTERNATIONAL MODE</div>
+<div id="local" style="border-radius: 0px 12px 12px 0px;">LOCAL MODE</div>
+</div>
+<!--
+<div id ='test_load'></div>
+-->
+<div id="hba_super_container">
+<div id="hba_container"><!-- -- All of the HBA tiles are generated by JavaScript here -- --></div>
+<div class="hba_tile_info">
+<div class="hba_tile_fixed_info">HBA antenna status. Click a tile for individual information.</div>
+<div class="hba_tile_updated_info1"></div>
+</div>
+</div>
+<div id="lba_super_container">
+<div class="lba_tile_info">
+<div class="lba_tile_fixed_info">LBA antenna status. Click an antenna for individual information.</div>
+<div class="lba_tile_updated_info">Loading Tile Information...</div>
+</div>
+<div id="lba_container"><!-- -- All of the LBA tiles are generated by JavaScript here -- --></div>
+</div>
+<!-- -- The Map -- -->
+<div id="map"></div>
+<div id="int_local_switch"></div>
+ 
 
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- -- Code below is for status map tab -- -->
-
-    <div id="Status-Layout" class="tabcontent" style="width: 100%; background-color: #003b4a; margin:0px auto; color:#fff;">
-        <center><h2 style='color:white;'>Status Map of Telescope</h2><h3>(HBA and LBA not live yet)</h3></center>
-        <!-- -- ALL BELOW CODE USED FOR STATUS MAP OF ANTENNAE-- -->
-        <!-- -- Ensuring that tiles are scaled and reactivated if browser is resized-- -->
-        <!--<body onresize="scaleTiles(), activate_tiles()">-->
-
-
-
-	<div class="loc_int_switch">
-
-	The station is currently in: 
-	</br></br>
-
-	    <div id = "international" style="border-radius: 12px 0px 0px 12px;">INTERNATIONAL MODE</div>
-	
-	    <div id = "local" style="border-radius: 0px 12px 12px 0px;">LOCAL MODE</div>
-	</div>
-
-	<!-- <div id ='test_load'></div> -->
-
-	<div id = "hba_super_container">
-	
-		<div id = 'hba_container'>
-		<!-- -- All of the HBA tiles are generated by JavaScript here -- --> 
-		</div>	
-
-		<div class = 'hba_tile_info'>
-			<div class = 'hba_tile_fixed_info'>
-				HBA antenna status. Click a tile for individual information. </br></br>
-			</div>
-				
-			<div class = 'hba_tile_updated_info1'>
-
-			</div>
-		</div>
-
-	</div>
-
-
-	<div id ='lba_super_container'>
-
-		<div class = 'lba_tile_info'>
-			<div class = 'lba_tile_fixed_info'>
-				LBA antenna status. Click an antenna for individual information. </br></br>
-			</div>
-				
-			<div class = 'lba_tile_updated_info'>
-				Loading Tile Information...
-			</div>
-		</div>
-
-
-		<div id = 'lba_container'>
-		<!-- -- All of the LBA tiles are generated by JavaScript here -- --> 
-		</div>
-
-	</div>
-
-
-	<!-- -- The Map -- -->
-	<div id = "map"></div>
-
-	<div id = "int_local_switch"></div>
-		
-
-</br></br>
-
-	<script type = 'text/javascript'>
+<script type = 'text/javascript'>
 
 
 		// The lists of x and y positions for the HBAs and LBAs, moving to a txt file soon. 34 and 35 X positions have been changed to fit in space (orig: 33.39098,30.52299)
@@ -449,7 +373,7 @@
 			   newDiv.style.top = y_pos[i]*scaleY  + (document.getElementById("lba_container").offsetHeight/2) + 'px';
 			   newDiv.style.color = '#FFFFFF';
 				if (i <= 95){
-				   newDiv.innerHTML ='<b>'+i+'</b></br></br><img src =\''+ url+'\'/>';   
+				   newDiv.innerHTML =i+'</br></br><img src =\''+ url+'\'/>';
 			    };
 
 			    //Removed a whole bunch of else if statements to change the url
@@ -457,9 +381,9 @@
 			   document.getElementById('lba_container').appendChild(newDiv);
 			};
 		};
-		
+
 		function displayHBATiles(scaleX, scaleY){
-		
+
 			for(var i = 0; i < x_hba.length; i++){
 				var newDiv = document.createElement('div');
 				newDiv.id = 'hba_'+ i;
@@ -470,28 +394,28 @@
 				newDiv.style.color = '#FFFFFF';
 				if (i <= 9){
 					url = 'https://proxy.lofar.eu/array_status/stationtests/DATABASE/DATA/PNG/ie613/hba/Tile00'+ i +'.png'
-					newDiv.innerHTML ='<b>'+i+'</b>';//</br></br><img src =\''+ url+'\'/>';
+					newDiv.innerHTML = i ;//</br></br><img src =\''+ url+'\'/>';
 				   }
-					
+
 				else{
 					url = 'https://proxy.lofar.eu/array_status/stationtests/DATABASE/DATA/PNG/ie613/hba/Tile0'+ i +'.png'
-					newDiv.innerHTML ='<b>'+i+'</b>';//</br></br><img src =\''+ url+'\'/>';   
+					newDiv.innerHTML =i;//</br></br><img src =\''+ url+'\'/>';
 				};
-				
+
 			document.getElementById('hba_container').appendChild(newDiv);
 
-			};		
+			};
 		};
 
 	// Function below to change size of tiles depending on browser size (e.g. phone/laptop)
 		function scaleTiles(){
 			var el = document.getElementById('hba_container');
 			while ( el.firstChild ) el.removeChild( el.firstChild );
-			
+
 			var el2 = document.getElementById('lba_container');
 			while ( el2.firstChild ) el2.removeChild( el2.firstChild );
-			
-			
+
+
 			var w = window.outerWidth;
 			if (w > 800){
 				displayHBATiles(11,11);
@@ -502,7 +426,7 @@
 				displayLBATiles(10,10);
 			};
 		};
-		
+
 		scaleTiles();
 
 
@@ -511,11 +435,11 @@
 	    // Creating a Layer object
 	    var minimal = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 	    var earth =  new L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {attribution: ''});
-				 
+
 		var minimal_2 = new L.TileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png');
 
 		var mapbox = new L.TileLayer('https://api.mapbox.com/styles/v1/jeremyr/ckgi4g8zt04ho19k2l5qhmva4/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiamVyZW15ciIsImEiOiJjanhmdnV0MG4wd2x5M3htd2RtdW84bXU1In0.PyMJYJGpcMczv4Ij60Hyyg');
-				 		
+
 		var bounds = new L.LatLngBounds(new L.LatLng(81.4139332828511, -166.81195966499448), new L.LatLng(-48.45835188280866, 194.79813092431195));
 
 
@@ -532,24 +456,24 @@
 			maxBounds: bounds,
 			maxBoundsViscosity: 1.0
 	    }
-	                 
+
 	    // Creating a map object
 	    var map = new L.map('map', mapOptions);
-		
+
 		map.dragging.disable();
 
 		map.on('click', function(ev){
 			var latlng = map.mouseEventToLatLng(ev.originalEvent);
 			console.log(latlng.lat + ', ' + latlng.lng);
 		});
-	   
+
 		// var baseMaps = {
 		// 	//"Territories": minimal,
 		// 	//"Satellite View": earth,
 		// 	//"Geographic Borders": minimal_2,
 		// 	"Mapbox":mapbox,
 		// };
-			 
+
 		var LeafIcon = L.Icon.extend({
 			options: {
 			   iconSize:     [25, 25],
@@ -558,41 +482,41 @@
 			   shadowAnchor: [4, 62],
 			}
 		});
-			
+
 		var greenIcon = new LeafIcon({
-			iconUrl:'http://lofar.ie/wp-content/uploads/2020/11/hba_tile_map_circle.png' , 
+			iconUrl:'http://lofar.ie/wp-content/uploads/2020/11/hba_tile_map_circle.png' ,
 			//shadowUrl: ''
 		});
-			
+
 		// The stations markers for locations
 		var m_IE_birr = L.marker([53.095039, -7.921957], {icon: greenIcon},).addTo(map).bindPopup("<b>I-LOFAR, Birr</b>").openPopup();
-			 
-		var m_UK_chib = L.marker([51.143901, -1.434145], {icon: greenIcon},).addTo(map).bindPopup("<b>Chilbolton</b>");	 
-			 	
+
+		var m_UK_chib = L.marker([51.143901, -1.434145], {icon: greenIcon},).addTo(map).bindPopup("<b>Chilbolton</b>");
+
 		var m_SUPTERP = L.marker([52.915245, 6.869848], {icon: greenIcon},).addTo(map).bindPopup("<b>LOFAR CORE and REMOTE Stations</b>");//.openPopup();
-			 
+
 		var m_GER_eff = L.marker([50.523149, 6.883575], {icon: greenIcon},).addTo(map).bindPopup("<b>Effelsberg</b>");
 		var m_GER_unter = L.marker([48.501215, 11.287567], {icon: greenIcon},).addTo(map).bindPopup("<b>Unterweilenbach</b>");
 		var m_GER_taut = L.marker([50.979460, 11.710707], {icon: greenIcon},).addTo(map).bindPopup("<b>Tautenburg</b>");
 		var m_GER_pot = L.marker([52.438182, 13.016394], {icon: greenIcon},).addTo(map).bindPopup("<b>Potsdam</b>");
 		var m_GER_jul = L.marker([50.897165, 6.423889], {icon: greenIcon},).addTo(map).bindPopup("<b>Julich</b>");
 		var m_GER_nord = L.marker([53.698717, 9.969277], {icon: greenIcon},).addTo(map).bindPopup("<b>Norderstedt</b>");
-		 
+
 		var m_FRA_nan = L.marker([47.375703, 2.192982], {icon: greenIcon},).addTo(map).bindPopup("<b>Nancay</b>");
-		 
+
 		var m_SWE_ons = L.marker([57.398965, 11.930267], {icon: greenIcon},).addTo(map).bindPopup("<b>Onsala</b>");
-		 
+
 		var marker_POL_bald = L.marker([53.593734, 20.589443], {icon: greenIcon},).addTo(map).bindPopup("<b>Baldy</b>");
 		var marker_POL_boro = L.marker([52.275786, 17.073614], {icon: greenIcon},).addTo(map).bindPopup("<b>Borowiec</b>");
 		var marker_POL_lazy = L.marker([49.964854, 20.489611], {icon: greenIcon},).addTo(map).bindPopup("<b>Lazy</b>");
-		 
+
 		var marker_LAT_ven = L.marker([57.553493, 21.854916], {icon:greenIcon},).addTo(map).bindPopup("<b>Ventspils</b>");
-		
+
                 var marker_ITA_med = L.marker([44.5208, 11.6469], {icon:greenIcon},).addTo(map).bindPopup("<b>Medicina (In Planning)</b>");
 
 		//L.control.layers(baseMaps).addTo(map);
-			
-			
+
+
 		function getWeekNumber(d) {
 			// Copy date so don't modify original
 			d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -613,11 +537,11 @@
 		month = new Date().getMonth() +1;
 		var url = "https://crossorigin.me/https://old.astron.nl/lofar-schedule/schedule/schedule.php?week=" + result[1] + "&year=" + new Date().getFullYear() + "&month=" + month;
 		console.log(url);
-		
+
 
 		function LiveMap(today) {
-	
-			
+
+
 			if (today == 1){
 				// LOCAL MODE
 				var animate_style = {
@@ -632,9 +556,9 @@
 					use: L.curve,
 				};
 			console.log('LOCAL MODE');
-	
+
 			}
-	
+
 			else if(today == 2){
 				// INTERNATIONAL MODE
 				var animate_style = {
@@ -651,7 +575,7 @@
 				console.log('INTERNATIONAL MODE');
 
 			};
-				
+
 			// Lines connecting the stations
 			var IE_CORE_line = L.polyline.antPath(['M',[53.095039, -7.921957],'C',[54.367758,-4.8559570],[52.1469733, -4.06494],[52.915245, 6.869848]],  animate_style).addTo(map);
 			var ÙK_CORE_line = L.polyline.antPath(['M',[51.143901, -1.434145],'Q',[52.61639, 2.043457031],[52.915245, 6.869848]],  animate_style).addTo(map);
@@ -668,33 +592,29 @@
 			var GER_CORE_3_line = L.polyline.antPath(['M', [53.698717, 9.969277],'Q',[53.080827, 8.876953],[52.915245, 6.869848]],  animate_style).addTo(map);
 			var VES_POL_line = L.polyline.antPath(['M', [57.553493, 21.854916],'Q',[55.47831582209813, 22.206714494287812],[53.593734, 20.589443]],  animate_style).addTo(map);
 		};
-		
-		
 
 
 
-        
         function LOC_INT() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-              		//document.getElementById("int_local_switch").innerHTML = this.responseText;
 
-              		// LOCAL MODE
-     //        	    document.getElementById("international").className = 'off';
-					// document.getElementById("local").className = 'on';
-					// LiveMap(1);
+
+                if (this.responseText.includes('INTERNATIONAL MODE')){
+                	document.getElementById("international").className = 'on';
+					document.getElementById("local").className = 'off';
+					LiveMap(2);
+					console.log('INTERNATIONAL');
+                                        //document.getElementById("statusmap").click();
+                }
+                else{
+                	document.getElementById("international").className = 'off';
+					document.getElementById("local").className = 'on';
+					LiveMap(1);
+					console.log('LOCAL');
+                                        //document.getElementById("defaultOpen").click();
 
                 }
-     //            else{
-
-     //            	// INTERNATIONAL MODE
-     //                document.getElementById("international").className = 'on';
-					// document.getElementById("local").className = 'off';
-					// LiveMap(2);
-     //            }
-
-ç
 
             };
             xhttp.open("GET", "https://lofar.ie/operations-monitor/filestatus_lcu.log", true);
@@ -703,44 +623,69 @@
 
         LOC_INT();
 
+
+
         function HBA_Problems() {
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
-            	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-        			var array = xmlhttp.responseText.split(",");
-        			
-        			for(tile_number in array){
-        				var problem_Tile = document.getElementById('hba_'+ tile_number);
-	   					problem_Tile.className = 'hba_problem';
-	   				}
 
-    			}
+            	var array = xhttp.responseText.split(",");
+            	console.log(xhttp.responseText);
+
+                var arrayLength = array.length;
+                for (var i = 0; i < arrayLength; i++) {
+                    var tile_num_prob = array[i].split('+');
+                    var tile_num  = tile_num_prob[0];
+                    console.log(tile_num);
+                    var tile_prob = tile_num_prob[1]
+                    var problem_Tile = document.getElementById('hba_'+ tile_num);
+                    problem_Tile.className = 'hba_problem';
+                }
+
             };
 
-            xhttp.open("GET", "hba_tiles.log", true);
+            xhttp.open("GET", "https://lofar.ie/operations-monitor/fileHBA_numbers.log", true);
             xhttp.send();
         };
 
         HBA_Problems();
 
+
+        function LBA_Problems() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+
+            	var array = xhttp.responseText.split(",");
+            	console.log(xhttp.responseText);
+
+                var arrayLength = array.length;
+                for (var i = 0; i < arrayLength; i++) {
+                    var tile_num_prob = array[i].split('+');
+                    var tile_num  = tile_num_prob[0];
+                    console.log(tile_num);
+                    var tile_prob = tile_num_prob[1]
+                    var problem_Tile = document.getElementById('lba_'+ tile_num);
+                    problem_Tile.className = 'lba_problem';
+                }
+
+            };
+
+            xhttp.open("GET", "https://lofar.ie/operations-monitor/fileLBA_numbers.log", true);
+            xhttp.send();
+        };
+
+        LBA_Problems();
+
 	</script>
 
-
-
-
-
-        <!--</body>-->
-        <div>
-            <br /><br /><br /><br />   
-        </div>
-    </div>
-    </div>
-
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- -- below script needs to be kept at end of code, it divides out the page into three different tabs, observations/status map/engineering info -- -->
-    <script>
+<!--</body>-->
+<div></div>
+</div>
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+<!-- -- below script needs to be kept at end of code, it divides out the page into three different tabs, observations/status map/engineering info -- -->
+<script>
         function openPage(pageName, elmnt, color) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -755,12 +700,88 @@
             elmnt.style.backgroundColor = color;
         }
         window.scroll({
-            top: 0, 
-            left: 0, 
-            behavior: 'smooth' 
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
             });
 
         // Get the element with id="defaultOpen" and click on it
         document.getElementById("defaultOpen").click();
+       let hashTag = window.location.hash;
+
+       if (hashTag !== '') {
+           hashTag = hashTag.substring(1);
+
+           let targetName = '';
+
+           switch (hashTag) {
+               case "livedata":
+                   targetName = 'defaultOpen';
+                   break;
+               case "liv":
+                   targetName = 'defaultOpen';
+                   break;
+               case "live":
+                   targetName = 'defaultOpen';
+                   break;
+               case "li":
+                   targetName = 'defaultOpen';
+                   break;
+
+
+               case "antennastatus":
+                   targetName = 'statusmap';
+                   break;
+               case "antenna":
+                   targetName = 'statusmap';
+                   break;
+               case "antennae":
+                   targetName = 'statusmap';
+                   break;
+               case "status":
+                   targetName = 'statusmap';
+                   break;
+               case "ant":
+                   targetName = 'statusmap';
+                   break;
+               case "stat":
+                   targetName = 'statusmap';
+                   break;
+
+
+
+               case "enginfo":
+                   targetName = 'engineering';
+                   break;
+               case "engineering":
+                   targetName = 'engineering';
+                   break;
+               case "engineeringinfo":
+                   targetName = 'engineering';
+                   break;
+               case "eng":
+                   targetName = 'engineering';
+                   break;
+
+
+               case "archive":
+                   targetName = 'archive';
+                   break;
+               case "archivedata":
+                   targetName = 'archive';
+                   break;
+               case "archiveddata":
+                   targetName = 'archive';
+                   break;
+               case "arch":
+                   targetName = 'archive';
+                   break;
+               case "data":
+                   targetName = 'archive';
+                   break;
+           }
+        if (targetName !== '') {
+            document.getElementById(targetName).click();
+        }
+      }
     </script>
-</body>
