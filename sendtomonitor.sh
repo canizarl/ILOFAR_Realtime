@@ -47,3 +47,4 @@ for f in $(ls -r $pathtodata/*Y*lightcurve* | head -$n); do
     i=$((i+1))
 done
 
+
