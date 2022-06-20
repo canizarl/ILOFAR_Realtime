@@ -1,0 +1,10 @@
+*.dat
+*.png
+test
+TestData
+TestData
+monitor
+*test*
+__pycache__
+.DS_Store
+*.txt
