@@ -1,7 +1,7 @@
 #!/bin/bash
 source activate monitor_env
 
-
+#w
 #
 #year="2019"
 #month="01"
