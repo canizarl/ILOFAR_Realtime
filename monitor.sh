@@ -32,18 +32,19 @@
            Jeremy Rigney - jeremy.rigney (at) dias.ie
 
   changes:
-  2020-12-14 :  Jeremy: added line to run update_antenna_status.py.
-  2020-12-14 :  Alberto: 30 mins delay when international mode removed. Now it always updates every 10 mins.
-  2020-12-15 :  Alberto: Clear data_buffer at night.
+  2020-12-14 :  Jeremy: added line to run update_antenna_status.py.   
+  2020-12-14 :  Alberto: 30 mins delay when international mode removed. Now it always updates every 10 mins.  
+  2020-12-15 :  Alberto: Clear data_buffer at night.  
   2020-12-15 :  Jeremy: Send HBA+LBA status log files to webserver
+  2022-03-09 :  DMcK: Disable venv after LGC upgrade, patch daynow=$(date +%d) -> daynow=$(date +%e | sed 's/ //g')
 "
 day="0"
 
 while true
 do
-	source activate monitor_env
+	#source activate monitor_env
 
-	daynow=$(date +%d)
+	daynow=$(date +%e | sed 's/ //g')
 	if (($day != $daynow))
 	then
 		echo "new day"
@@ -62,14 +63,14 @@ do
 
 	today=$(date +'%Y.%m.%d')
 	day=$(date +%d)
-
+	
 	mkdir -p  ~/Monitor/data_buff/$today
 
 	# # # # # # # # # #
 	# Directories     #
 	# # # # # # # # # #
 	og_data_source="lcu:/data/home/user1/data/kbt/rcu357_1beam/${today}/*00?.dat"
-	realta_data_source="lcu:/data/home/user1/data/kbt/rcu357_1beam_datastream/${today}/*00?.dat"
+	realta_data_source="lcu:/data/home/user1/data/kbt/rcu357_1beam_datastream*/${today}/*00?.dat"
 	monitor_temp_data=~/"Monitor/data_buff/${today}"
 	python_dir=~/"Scripts/Python/MonitorRealtime/"
 	YYYY=$(date +'%Y')
@@ -80,24 +81,24 @@ do
 	echo " "
 	echo $(date)
 
-	# populates folders in Data folder with javascript files for the calendar to know the names of the figures that will be used.
-	python addtoscript.py
+	# populates folders in Data folder with javascript files for the calendar to know the names of the figures that will be used. 	
+	python3 addtoscript.py
 	curl -F file=@/home/ilofar/Data/IE613/monitor/dates_calendar.js https://lofar.ie/operations-monitor/post_log.php?js=dates_calendar
 
-        python update_antenna_status.py #/home/ilofar/Monitor/
+        python3 update_antenna_status.py #/home/ilofar/Monitor/
         curl -F file=@HBA_numbers.txt https://lofar.ie/operations-monitor/post_log.php?txt=HBA_numbers
-        curl -F file=@LBA_numbers.txt https://lofar.ie/operations-monitor/post_log.php?txt=LBA_numbers
-
+        curl -F file=@LBA_numbers.txt https://lofar.ie/operations-monitor/post_log.php?txt=LBA_numbers	
+        
         if rsync -ahP $og_data_source $monitor_temp_data | grep -q '.dat'; then
 		echo "Upload succeeded"
       		newestfile=$(ls -Art ${monitor_temp_data}/ | tail -n 1)
-		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/${newestfile} /home/ilofar/Data/IE613/monitor/$today
-
-
+		python3 /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/${newestfile} /home/ilofar/Data/IE613/monitor/$today
+		
+		
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #
-		# LGC
+		# # # # # # # # # #		   
+		# LGC   
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -105,7 +106,7 @@ do
 		echo 'LCU STATUS' > status_lcu.txt
 		date >> status_lcu.txt
 		ssh lcu 'rspctl --status' >> status_lcu.txt
-
+	
         echo "lofar monitor generated a preview."
         echo ""
 		./sendtomonitor.sh
@@ -113,12 +114,12 @@ do
 	elif rsync -ahP $realta_data_source $monitor_temp_data/datastream | grep -q '.dat'; then
 		echo "Upload succeeded. Realta is working."
 		newestfile=$(ls -Art ${monitor_temp_data}/datastream/ | tail -n 1)
-       		python /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/${newestfile} /home/ilofar/Data/IE613/monitor/$today
-
+       		python3 /home/ilofar/Scripts/Python/MonitorRealtime/lofar_monitor.py ${monitor_temp_data}/datastream/${newestfile} /home/ilofar/Data/IE613/monitor/$today
+		
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #
-		# LGC
+		# # # # # # # # # #		   
+		# LGC   
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -133,8 +134,8 @@ do
 	else
 		# # # # # # # # # #
 		# STATUS REPORT   #
-		# # # # # # # # # #
-		# LGC
+		# # # # # # # # # #		   
+		# LGC   
 		echo 'LGC STATUS' > status_lgc.txt
 		date >> status_lgc.txt
 		sensors >> status_lgc.txt
@@ -153,12 +154,16 @@ do
 	curl -F file=@status_lcu.txt https://lofar.ie/operations-monitor/post_log.php?txt=status_lcu
 	curl -F file=@status_lgc.txt https://lofar.ie/operations-monitor/post_log.php?txt=status_lgc
 	echo "logs sent correctly"
-
+        
         echo " sleep 10 mins"
 	#wait 10 mins
 	sleep 600
-
+	
 done
+
+"Test string. ignore."
+
+
 
 
 
